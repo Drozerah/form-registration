@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="main.css">
+  <title>Registration Form</title>
+</head>
+<body>
+  <main>
+    <h1>Registration form</h1>
+    <form action="/" id="resgistration_form">
+      <label for="username">User Name:</label>
+      <div>
+        <input type="text" name="username" class="username" autocomplete="username" placeholder="Enter your user name" required>
+      </div>
+      <label for="email">Email:</label>
+      <div>
+        <input type="text" name="email" class="email" autocomplete="email" placeholder="Enter your email address" required>
+      </div>
+      <label for="password">Password:</label>
+      <div>
+        <input type="password" name="password" class="password" autocomplete="new-password" placeholder="Enter your password" required>
+        <i id="visibility" class="noSelect">visibility</i>
+      </div>
+      <label for="confirm">Confirmation:</label>
+      <div>
+        <input type="password" name="confirm" class="password" autocomplete="new-password" placeholder="Please confirm your password" required>
+      </div>
+      <div>
+        <input type="submit" name="submit" value="register">
+      </div>
+    </form>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

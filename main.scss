@@ -37,7 +37,7 @@ body{
         outline: none;
         border: 1px solid #bbb;
         border-radius: 3px;
-        padding: 10px 10px;
+        padding: 10px 10px 9px 10px;
         flex-grow: 1;
         font-size: 17px;
       }
@@ -70,63 +70,5 @@ body{
   }
 }
 
-.noSelect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/**
-* Underline Effect
-*/
-.underline{
-  position: relative;
-  input, i{
-    margin-bottom: 1px;
-  }
-  &::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background-color: #0AF;
-    transition: transform 300ms ease-in-out;
-    transform: scaleX(0);
-  }
-  &:hover::before,
-  &:focus::before {
-    transform: scaleX(1);
-  }
-  &:hover,
-  &:focus{
-    input, i{
-      border-bottom-left-radius: 0px;
-      border-bottom-right-radius: 0px;
-    }
-    transform: scaleX(1);
-  }
-}
-
-.underlineFocus{
-  position:relative;
-  input, i{
-    margin-bottom: 1px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-  }
-  &::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background-color: #0AF;
-    transform: scaleX(1);
-  }
-}
+@import './partials/utils';
+@import './partials/underline';

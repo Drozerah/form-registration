@@ -85,6 +85,9 @@ body form div i {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   border: 1px solid #bbb;
   padding: 0 10px 0 0;
   background-color: #fff;
@@ -104,6 +107,25 @@ body form div input[name='submit'] {
   font-weight: 100;
   padding: 8px 10px;
   margin-top: 18px;
+}
+
+body form #message {
+  display: none;
+}
+
+body form #message.error, body form #message.success {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background-color: #F0F0F0;
+}
+
+body form #message.error {
+  color: #b71c1c;
+}
+
+body form #message.success {
+  color: green;
 }
 
 .noSelect {
@@ -137,6 +159,8 @@ body form div input[name='submit'] {
   transition: -webkit-transform 300ms ease-in-out;
   transition: transform 300ms ease-in-out;
   transition: transform 300ms ease-in-out, -webkit-transform 300ms ease-in-out;
+  -webkit-transition-delay: 100ms;
+          transition-delay: 100ms;
   -webkit-transform: scaleX(0);
           transform: scaleX(0);
 }
@@ -176,5 +200,72 @@ body form div input[name='submit'] {
   background-color: #0AF;
   -webkit-transform: scaleX(1);
           transform: scaleX(1);
+}
+
+form.action {
+  position: relative;
+}
+
+form.action .overlay {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 1;
+  background-color: #e7e7e747;
+}
+
+form.action .overlay::before {
+  content: '';
+  --content-accent-color: #0AF;
+  --content-border-width: 3px;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border-top: var(--content-border-width) solid var(--content-accent-color);
+  border-right: var(--content-border-width) solid transparent;
+  border-bottom: var(--content-border-width) solid var(--content-accent-color);
+  border-left: var(--content-border-width) solid transparent;
+  opacity: 1;
+  z-index: 3;
+  -webkit-animation: spin 500ms infinite linear;
+          animation: spin 500ms infinite linear;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
 }
 /*# sourceMappingURL=main.css.map */

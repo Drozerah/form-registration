@@ -10,23 +10,24 @@
 <body>
   <main>
     <h1>Registration form</h1>
-    <form action="/" id="resgistration_form">
+    <form action="/" id="resgistration_form" method="GET" name="resgistration_form">
+      <div id="message"></div>
       <label for="username">User Name:</label>
       <div class="underline">
-        <input type="text" name="username" class="username" autocomplete="off" placeholder="Enter your user name" required>
+        <input type="text" name="username" class="username" autocomplete="off" placeholder="Enter your user name" value='username' required>
       </div>
       <label for="email">Email:</label>
       <div class="underline">
-        <input type="text" name="email" class="email" autocomplete="off" placeholder="Enter your email address" required>
+        <input type="text" name="email" class="email" autocomplete="off" placeholder="Enter your email address" value='email' required>
       </div>
       <label for="password">Password:</label>
       <div class="underline">
-        <input type="password" name="password" class="password" autocomplete="off" placeholder="Enter your password" required>
-        <i id="visibility" class="noSelect">visibility</i>
+        <input type="password" name="password" class="password" autocomplete="off" placeholder="Enter your password" value="a" required>
+        <i id="visibility" class="noSelect material-icons">visibility</i>
       </div>
       <label for="confirm">Confirmation:</label>
       <div class="underline">
-        <input type="password" name="confirm" class="password" autocomplete="off" placeholder="Please confirm your password" required>
+        <input type="password" name="confirm" class="password" autocomplete="off" placeholder="Please confirm your password" value="a" required>
       </div>
       <div>
         <input type="submit" name="submit" value="register">

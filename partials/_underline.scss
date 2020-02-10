@@ -15,6 +15,7 @@
     height: 2px;
     background-color: #0AF;
     transition: transform 300ms ease-in-out;
+    transition-delay: 100ms;
     transform: scaleX(0);
   }
   &:hover::before,

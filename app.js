@@ -1,26 +1,34 @@
 (() => {
   /**
-  * Get form element
-  */
-  const form = document.forms.resgistration_form
-  /**
   * Class Validate Form
   */
   class Form {
     constructor (form) {
-      this.form = form
-      this.passwords = [...this.form.elements].filter(elem => elem.name === 'password' || elem.name === 'confirm') || null
-      this.data = [...this.form.elements].filter(elem => elem.name !== 'submit') || null
-      this.underlines = [...this.form.querySelectorAll('.underline')] || null
+      this._form = form
+      this.elements = this._form.elements || null
+      this.username = this.elements.username || null
+      this.email = this.elements.email || null
+      this.password = this.elements.password || null
+      this.confirm = this.elements.confirm_password || null
+      this.data = [...this._form.elements].filter(elem => elem.name !== 'submit') || null
+      this.underlines = [...this._form.querySelectorAll('.underline')] || null
       this.isVisible = false
-      this.visibility = this.form.querySelector('#visibility') || null
-      this.message = this.form.querySelector('#message') || null
+      this.visibility = this._form.querySelector('#visibility') || null
+      this.message = this._form.querySelector('#message') || null
+    }
+
+    /**
+    * Debug
+    */
+    Debug () {
+      console.log(this.elements) // !DEBUG
+      console.log(this.username) // !DEBUG
     }
 
     /**
     * Underline Effect
     */
-    initUnderline () {
+    InitUnderline () {
       const focusEvents = (element, eventType) => {
         switch (true) {
           case eventType === 'focus':
@@ -33,13 +41,13 @@
             break
         }
       }
-      if (this.underlines.length > 0) {
+      if (!this.underlines.length > 0) {
+        console.error('Error: elements with class of \'underline\' are required in form template.')
+      } else {
         this.underlines.forEach(underline => {
           underline.children[0].addEventListener('focus', (e) => focusEvents(e.target.parentElement, 'focus'))
           underline.children[0].addEventListener('focusout', (e) => focusEvents(e.target.parentElement, 'focusout'))
         })
-      } else {
-        console.error('InitUnderline() Error: elements with class of \'underline\' are required in form template.')
       }
       return this // chainable method
     }
@@ -47,21 +55,22 @@
     /**
     * Init Toogle Visibility
     */
-    initToogleVisibility () {
+    InitToogleVisibility () {
+      const passwords = [this.password, this.confirm]
       const toogleVisibility = (target) => {
         if (!this.isVisible) {
-          this.passwords.forEach(element => (element.type = 'text'))
+          passwords.forEach(element => (element.type = 'text'))
           target.innerHTML = 'visibility_off'
         } else {
-          this.passwords.forEach(element => (element.type = 'password'))
+          passwords.forEach(element => (element.type = 'password'))
           target.innerHTML = 'visibility'
         }
         this.isVisible = !this.isVisible
       }
-      if (this.visibility) {
-        this.visibility.addEventListener('click', (e) => toogleVisibility(e.target))
+      if (!this.visibility) {
+        console.error('Error: element with the id attribut  off \'visibility\' is required in form template.')
       } else {
-        console.error('initToogleVisibility() Error: element with the attribut id \'visibility\' is required in form template.')
+        this.visibility.addEventListener('click', (e) => toogleVisibility(e.target))
       }
       return this // chainable method
     }
@@ -69,26 +78,29 @@
     /**
     * Check Passwords
     */
-    isPasswordsEquals () {
+    IsPasswordsEquals () {
       return new Promise((resolve, reject) => {
-        if (this.passwords.length !== 2) {
-          console.error('isPasswordsEquals() Error: elements with class or \'password\' or \'confirm\' are required in form template.')
+        if ((!this.password) || (!this.confirm)) {
+          const ErrorMsg = 'Error: elements with class off \'password\' or \'confirm_password\' are required in form template.'
+          console.error(ErrorMsg)
+          // Send error message
           const error = {
             success: false,
-            msg: 'isPasswordsEquals() Error: elements with class or \'password\' or \'confirm\' are required in form template.'
+            msg: ErrorMsg
           }
           return reject(error)
         }
-        const [password, confirm] = [...this.passwords]
-        if (password.value === confirm.value) return resolve(true)
+        // Make equality validation
+        if (this.password.value === this.confirm.value) return resolve(true)
+        // Send error message
         const error = {
           success: false,
           details: [
             {
               msg: 'Invalid passwords.',
               value: {
-                password: password.value,
-                confirm: confirm.value
+                password: this.password.value,
+                confirm: this.confirm.value
               }
             }
           ]
@@ -100,7 +112,7 @@
     /**
     * Get Form Data
     */
-    getFormData () {
+    GetFormData () {
       const data = this.data.reduce((acc, input) => ({ ...acc, [input.name]: input.value }), {})
       return {
         success: true,
@@ -116,77 +128,94 @@
     /**
     * Add Overlay Spinner
     */
-    addOverlaySpinner () {
+    AddOverlaySpinner () {
       const overlay = document.createElement('div')
       overlay.classList.add('overlay')
-      this.form.appendChild(overlay)
-      this.form.classList.add('action')
+      this._form.appendChild(overlay)
+      this._form.classList.add('action')
     }
 
     /**
     * Remove Overlay Spinner
     */
-    removeOverlaySpinner () {
-      const overlay = this.form.querySelector('.overlay')
-      this.form.removeChild(overlay)
-      this.form.classList.remove('action')
+    RemoveOverlaySpinner () {
+      const overlay = this._form.querySelector('.overlay')
+      this._form.removeChild(overlay)
+      this._form.classList.remove('action')
     }
 
     /**
     * Flash Message
     */
-    display (response) {
-      const [detail] = [...response.details]
-      this.message.classList = []
-      if (!response.success) {
-        this.message.innerHTML = detail.msg
-        this.message.classList.add('error')
+    Display (response) {
+      if (!response.details) {
+        console.warn('Info: no error details to display because off missing template elements')
       } else {
-        this.message.innerHTML = detail.msg
-        this.message.classList.add('success')
+        const [detail] = [...response.details]
+        this.message.classList = []
+        if (!response.success) {
+          this.message.innerHTML = detail.msg
+          this.message.classList.add('error')
+        } else {
+          this.message.innerHTML = detail.msg
+          this.message.classList.add('success')
+        }
       }
+    }
+
+    /**
+    * Submit Events
+    *
+    * @param {Function} cb a callback function
+    * @returns {Method} return an event listener
+    */
+    Submit (cb) {
+      return this._form.addEventListener('submit', cb.bind(this))
     }
   }
 
+  // Get Form
+  let RegisterForm = document.forms.register_form
   // Instanciate Form class
-  const RegisterForm = new Form(form)
+  RegisterForm = new Form(RegisterForm)
   // Init Underline Effect
-  RegisterForm.initUnderline()
+  RegisterForm.InitUnderline()
   // Init Toogle Visibility
-  RegisterForm.initToogleVisibility()
+  RegisterForm.InitToogleVisibility()
   /**
-  * Submit Event on form
+  * Form Submit Event
   */
-  form.addEventListener('submit', async (e) => {
+  RegisterForm.Submit(async function (e) {
+    this.Debug() // !DEBUG
     try {
       e.preventDefault()
-      const validatePasswords = await RegisterForm.isPasswordsEquals()
-      const formData = await RegisterForm.getFormData()
+      const validatePasswords = await this.IsPasswordsEquals()
+      // const formData = await this.GetFormData()
       if (validatePasswords) {
         const confirmationMsg = {
-          username: formData.details[0].value.username,
-          email: formData.details[0].value.email,
-          password: formData.details[0].value.password
+          username: this.username.value,
+          email: this.email.value,
+          password: this.password.value
         }
         const msg = `Please confirm your registration:\n ${JSON.stringify(confirmationMsg, null, 2)}`
         // prompt confirmation
         if (!confirm(msg)) {
           console.log('confirmation aborted') // !DEBUG
         } else {
-          RegisterForm.addOverlaySpinner()
+          this.AddOverlaySpinner()
           setTimeout(() => {
-            RegisterForm.removeOverlaySpinner()
+            this.RemoveOverlaySpinner()
             console.log('confirmed') // !DEBUG
-            RegisterForm.display(formData)
+            this.Display(this.GetFormData())
             // reset form
             console.log('form reset') // !DEBUG
             e.target.reset()
-          }, 20000)
+          }, 500)
         }
       }
     } catch (error) {
       console.log('error case') // !DEBUG
-      RegisterForm.display(error)
+      this.Display(error)
     }
   })
 })()

@@ -274,6 +274,20 @@
     DisplayThisErrorField (input) {
       input.classList.add('error-field')
     }
+
+    /**
+     * Reset form and hide passwords content
+     * @param  {Object} form the form to reset
+     */
+    ResetForm () {
+      // if passwords content are visible
+      if (this.isVisible) {
+        // hide passwords content
+        this.VisibilityOn()
+      }
+      // Reset form
+      this._form.reset()
+    }
   }
 
   // Get Form
@@ -314,7 +328,8 @@
             this.DisplayFielsMessage(formData)
             // reset form
             console.log('form reset') // !DEBUG
-            e.target.reset()
+            // e.target.reset()
+            this.ResetForm()
             console.info(formData)
             console.log(JSON.stringify(formData, null, 2)) // !DEBUG
           }, 500)

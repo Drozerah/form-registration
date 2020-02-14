@@ -169,7 +169,6 @@
 
     /**
     * Submit Events
-    *
     * @param {Function} cb a callback function
     * @returns {Method} return an event listener
     */
@@ -276,9 +275,9 @@
     }
 
     /**
-     * Reset form and hide passwords content
-     * @param  {Object} form the form to reset
-     */
+    * Reset form and hide passwords content
+    * @param  {Object} form the form to reset
+    */
     ResetForm () {
       // if passwords content are visible
       if (this.isVisible) {
@@ -315,7 +314,7 @@
           password: this.password.value
         }
         const msg = `Please confirm your registration:\n ${JSON.stringify(confirmationMsg, null, 2)}`
-        // prompt confirmation
+        // Prompt a confirmation to user
         if (!confirm(msg)) {
           console.info('Confirmation aborted.')
         } else {
@@ -326,9 +325,7 @@
             // Display validation messages
             this.DisplayHeadMessage(formData)
             this.DisplayFielsMessage(formData)
-            // reset form
-            console.log('form reset') // !DEBUG
-            // e.target.reset()
+            // Reset form
             this.ResetForm()
             console.info(formData)
             console.log(JSON.stringify(formData, null, 2)) // !DEBUG

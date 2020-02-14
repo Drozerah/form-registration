@@ -15,14 +15,18 @@
       this.isVisible = false
       this.visibility = this._form.querySelector('#visibility') || null
       this.message = this._form.querySelector('#message') || null
+      this._result = {
+        success: undefined,
+        details: []
+      }
     }
 
     /**
     * Debug
     */
     Debug () {
-      console.log(this.elements) // !DEBUG
-      console.log(this.username) // !DEBUG
+      // console.log(this.elements) // !DEBUG
+      // console.log(this.username) // !DEBUG
     }
 
     /**
@@ -76,36 +80,55 @@
     }
 
     /**
+    * Turn visibility on
+    */
+    VisibilityOn () {
+      this.isVisible = false
+      this.visibility.innerHTML = 'visibility'
+    }
+
+    /**
+    * Turn visibility off
+    */
+    VisibilityOff () {
+      this.isVisible = true
+      this.visibility.innerHTML = 'visibility_off'
+    }
+
+    /**
     * Check Passwords
     */
     IsPasswordsEquals () {
       return new Promise((resolve, reject) => {
+        // Error First Traitement
         if ((!this.password) || (!this.confirm)) {
-          const ErrorMsg = 'Error: elements with class off \'password\' or \'confirm_password\' are required in form template.'
+          // Template Error
+          // Create error message
+          const ErrorMsg = 'Error: Form structure, elements with name off \'password\' or \'confirm_password\' not found.'
+          // Print error
           console.error(ErrorMsg)
-          // Send error message
-          const error = {
-            success: false,
-            msg: ErrorMsg
-          }
-          return reject(error)
+          // Update this._result Object
+          this.NewErrorDetail(ErrorMsg, undefined, '\'password\' or \'confirm_password\'')
+          // Reject Promise
+          reject(this.result)
+          return this // chainable method
         }
-        // Make equality validation
-        if (this.password.value === this.confirm.value) return resolve(true)
-        // Send error message
-        const error = {
-          success: false,
-          details: [
-            {
-              msg: 'Invalid passwords.',
-              value: {
-                password: this.password.value,
-                confirm: this.confirm.value
-              }
-            }
-          ]
+        // Validate Passwords
+        if (this.password.value !== this.confirm.value) {
+          // Create error message
+          const ErrorMsg = 'Invalid password confirmation.'
+          // Update this._result Object
+          this.NewErrorDetail(ErrorMsg, this.password.value, this.password.name)
+          // Update this._result Object
+          this.NewErrorDetail(ErrorMsg, this.confirm.value, this.confirm.name)
+          // Reject promise
+          reject(this.result)
+          return this // chainable method
+        } else {
+          // resolve Promise
+          resolve(true)
+          return this // chainable method
         }
-        return reject(error)
       })
     }
 
@@ -145,15 +168,59 @@
     }
 
     /**
-    * Flash Message
+    * Submit Events
+    *
+    * @param {Function} cb a callback function
+    * @returns {Method} return an event listener
     */
-    Display (response) {
-      if (!response.details) {
+    Submit (cb) {
+      return this._form.addEventListener('submit', cb.bind(this))
+    }
+
+    /**
+     * Update this._result Object
+     * @param  {String} msg the detail error message
+     * @param  {String} value the field value
+     * @param  {String} param the field name
+     */
+    NewErrorDetail (msg, value, param) {
+      // update success status
+      this.UpdateSuccess(false)
+      const detail = { param, msg, value }
+      // if detail.param already exit => update its value else push detail
+      const exist = this.result.details.filter(error => error.param === detail.param)[0] || null
+      exist != null ? exist.value = detail.value : this.PushDetail(detail)
+    }
+
+    /**
+    * Getter
+    * @returns {Object} return this._result Object
+    */
+    get result () { return this._result }
+
+    /**
+    * Update this._result.details Array
+    * @param {Object} detail the detail Object to push
+    */
+    PushDetail (detail) { this.result.details.push(detail) }
+
+    /**
+    * Update this._result.success prop
+    * @param  {Boolean} boolean the property to update
+    */
+    UpdateSuccess (boolean) { this.result.success = boolean }
+
+    /**
+    * Display Head Message
+    * @param  {Object} result this._result Object
+    */
+    DisplayHeadMessage (result) {
+      if (!result.details) {
         console.warn('Info: no error details to display because off missing template elements')
       } else {
-        const [detail] = [...response.details]
+        const [detail] = [...result.details]
         this.message.classList = []
-        if (!response.success) {
+        if (!result.success) {
           this.message.innerHTML = detail.msg
           this.message.classList.add('error')
         } else {
@@ -164,13 +231,48 @@
     }
 
     /**
-    * Submit Events
-    *
-    * @param {Function} cb a callback function
-    * @returns {Method} return an event listener
+    * Display error fields
+    * @param  {Object} result this._result Object
     */
-    Submit (cb) {
-      return this._form.addEventListener('submit', cb.bind(this))
+    DisplayFielsMessage (result) {
+      // Hide existing error fields
+      this.HideAllErrorsFields()
+      // Error case
+      if (result.success === false) {
+        result.details.map(input => {
+          // expose field content
+          if (input.param.includes('password')) {
+            this.ExposeThisPasswordField(this.elements[input.param])
+          }
+          // display current field error
+          this.DisplayThisErrorField(this.elements[input.param])
+        })
+      }
+    }
+
+    /**
+    * Hide All class name off 'error_field'
+    */
+    HideAllErrorsFields () {
+      const elements = [...this.elements]
+      elements.map(element => element.classList.remove('error_field'))
+    }
+
+    /**
+    * Show passwords fields content
+    * @param  {Object} result this DOM element content to reveale
+    */
+    ExposeThisPasswordField (input) {
+      input.type = 'text'
+      this.VisibilityOff()
+    }
+
+    /**
+    * Hide passwords fields content
+    * @param  {Object} result this DOM element content to hide
+    */
+    DisplayThisErrorField (input) {
+      input.classList.add('error-field')
     }
   }
 
@@ -182,6 +284,7 @@
   RegisterForm.InitUnderline()
   // Init Toogle Visibility
   RegisterForm.InitToogleVisibility()
+
   /**
   * Form Submit Event
   */
@@ -190,7 +293,7 @@
     try {
       e.preventDefault()
       const validatePasswords = await this.IsPasswordsEquals()
-      // const formData = await this.GetFormData()
+      const formData = await this.GetFormData()
       if (validatePasswords) {
         const confirmationMsg = {
           username: this.username.value,
@@ -200,22 +303,29 @@
         const msg = `Please confirm your registration:\n ${JSON.stringify(confirmationMsg, null, 2)}`
         // prompt confirmation
         if (!confirm(msg)) {
-          console.log('confirmation aborted') // !DEBUG
+          console.info('Confirmation aborted.')
         } else {
           this.AddOverlaySpinner()
           setTimeout(() => {
             this.RemoveOverlaySpinner()
-            console.log('confirmed') // !DEBUG
-            this.Display(this.GetFormData())
+            console.info('Confirmation confirmed.') // !DEBUG
+            // Display validation messages
+            this.DisplayHeadMessage(formData)
+            this.DisplayFielsMessage(formData)
             // reset form
             console.log('form reset') // !DEBUG
             e.target.reset()
+            console.info(formData)
+            console.log(JSON.stringify(formData, null, 2)) // !DEBUG
           }, 500)
         }
       }
     } catch (error) {
-      console.log('error case') // !DEBUG
-      this.Display(error)
+      // Display validation messages
+      this.DisplayHeadMessage(error)
+      this.DisplayFielsMessage(error)
+      console.info(error) // !DEBUG
+      console.log(JSON.stringify(error, null, 2)) // !DEBUG
     }
   })
 })()

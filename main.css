@@ -128,12 +128,14 @@ body form #message.success {
   color: green;
 }
 
+/**
+* Utils
+*/
 .noSelect {
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 /**
@@ -202,6 +204,9 @@ body form #message.success {
           transform: scaleX(1);
 }
 
+/**
+*  Overlay Spinner
+*/
 form.action {
   position: relative;
 }
@@ -232,17 +237,13 @@ form.action .overlay {
 
 form.action .overlay::before {
   content: '';
-  --content-accent-color: #0AF;
-  --content-border-width: 3px;
   width: 50px;
   height: 50px;
   border-radius: 100%;
-  border-top: var(--content-border-width) solid var(--content-accent-color);
-  border-right: var(--content-border-width) solid transparent;
-  border-bottom: var(--content-border-width) solid var(--content-accent-color);
-  border-left: var(--content-border-width) solid transparent;
-  opacity: 1;
-  z-index: 3;
+  border-top: 3px solid #0AF;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid #0AF;
+  border-left: 3px solid transparent;
   -webkit-animation: spin 500ms infinite linear;
           animation: spin 500ms infinite linear;
 }
@@ -267,5 +268,13 @@ form.action .overlay::before {
     -webkit-transform: rotate(359deg);
             transform: rotate(359deg);
   }
+}
+
+/**
+* Managing errors
+*/
+form div input[class*='error_field'],
+form div input[class*='error_field'] + i {
+  border-color: #b71c1c;
 }
 /*# sourceMappingURL=main.css.map */

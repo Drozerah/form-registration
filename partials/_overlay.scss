@@ -1,3 +1,6 @@
+/**
+*  Overlay Spinner
+*/
 form.action{
   position: relative;
   .overlay{
@@ -15,16 +18,13 @@ form.action{
     background-color: #e7e7e747;
     &::before{
       content: '';
-      --content-accent-color: #0AF;
-      --content-border-width: 3px;
-      --content-size: 50px
-      width: var(--content-size);
-      height: var(--content-size);
+      width: 50px;
+      height: 50px;
       border-radius: 100%;
-      border-top: var(--content-border-width) solid var(--content-accent-color);
-      border-right: var(--content-border-width) solid transparent;
-      border-bottom: var(--content-border-width) solid var(--content-accent-color);
-      border-left: var(--content-border-width) solid transparent;
+      border-top: 3px solid #0AF;
+      border-right: 3px solid transparent;
+      border-bottom: 3px solid #0AF;
+      border-left: 3px solid transparent;
       @keyframes spin {
         0%{
           transform : rotate(0deg);

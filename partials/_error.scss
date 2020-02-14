@@ -1,0 +1,11 @@
+/**
+* Managing errors
+*/
+form{
+  div{
+    input[class*='error_field'],
+    input[class*='error_field'] + i {
+      border-color:#b71c1c;
+    }
+  }
+}

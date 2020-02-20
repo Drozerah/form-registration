@@ -30,7 +30,7 @@ body{
     flex-direction: column;
     padding: 20px;
     width: 400px;
-    label::before{
+    label::after{
       content: '*';
       color:#b71c1c;
     }

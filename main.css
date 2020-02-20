@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 body, html {
   height: 100vh;
   margin: 0;
@@ -79,17 +80,8 @@ body form div input[name='password'] {
 }
 
 body form div i {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
   border: 1px solid #bbb;
-  padding: 0 10px 0 0;
+  padding: 8px 10px 0 0;
   background-color: #fff;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;

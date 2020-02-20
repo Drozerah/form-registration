@@ -1,4 +1,4 @@
-// @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 body, html{
   height: 100vh;
@@ -49,11 +49,8 @@ body{
         border-right: none;
       }
       i{
-        display: flex;
-        align-items: center;
-        justify-content: center;
         border: 1px solid #bbb;
-        padding: 0 10px 0 0;
+        padding: 8px 10px 0 0;
         background-color: #fff;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;

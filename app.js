@@ -133,6 +133,27 @@
     }
 
     /**
+    * Email Validation
+    */
+    ValidateEmail () {
+      return new Promise((resolve, reject) => {
+        // Error first validation
+        // eslint-disable-next-line no-undef
+        if (!validator.isEmail(this.email.value)) {
+          const ErrorMsg = 'Invalid Email.'
+          this.NewErrorDetail(ErrorMsg, this.email.value, this.email.name)
+          // Reject promise
+          reject(this.result)
+          return this // chainable method
+        } else {
+          // resolve Promise
+          resolve(true)
+          return this // chainable method
+        }
+      })
+    }
+
+    /**
     * Get Form Data
     */
     GetFormData () {
@@ -233,7 +254,7 @@
     * Display error fields
     * @param  {Object} result this._result Object
     */
-    DisplayFielsMessage (result) {
+    DisplayFieldsMessage (result) {
       // Hide existing error fields
       this.HideAllErrorsFields()
       // Error case
@@ -243,6 +264,7 @@
           if (input.param.includes('password')) {
             this.ExposeThisPasswordField(this.elements[input.param])
           }
+          console.log(this.elements[input.param]) // !DEBUG
           // display current field error
           this.DisplayThisErrorField(this.elements[input.param])
         })
@@ -253,6 +275,7 @@
     * Hide All class name off 'error_field'
     */
     HideAllErrorsFields () {
+      console.log('hide all') // !DEBUG
       const elements = [...this.elements]
       elements.map(element => element.classList.remove('error_field'))
     }
@@ -271,7 +294,7 @@
     * @param  {Object} result this DOM element content to hide
     */
     DisplayThisErrorField (input) {
-      input.classList.add('error-field')
+      input.classList.add('error_field')
     }
 
     /**
@@ -305,9 +328,15 @@
     this.Debug() // !DEBUG
     try {
       e.preventDefault()
+      // reset result object
+      this._result = {
+        success: undefined,
+        details: []
+      }
       const validatePasswords = await this.IsPasswordsEquals()
+      const validateEmail = await this.ValidateEmail()
       const formData = await this.GetFormData()
-      if (validatePasswords) {
+      if (validatePasswords && validateEmail) {
         const confirmationMsg = {
           username: this.username.value,
           email: this.email.value,
@@ -324,18 +353,20 @@
             console.info('Confirmation confirmed.') // !DEBUG
             // Display validation messages
             this.DisplayHeadMessage(formData)
-            this.DisplayFielsMessage(formData)
+            this.DisplayFieldsMessage(formData)
             // Reset form
             this.ResetForm()
             console.info(formData)
             console.log(JSON.stringify(formData, null, 2)) // !DEBUG
           }, 500)
         }
+      } else {
+        console.info('Error Form validation') // !DEBUG
       }
     } catch (error) {
       // Display validation messages
       this.DisplayHeadMessage(error)
-      this.DisplayFielsMessage(error)
+      this.DisplayFieldsMessage(error)
       console.info(error) // !DEBUG
       console.log(JSON.stringify(error, null, 2)) // !DEBUG
     }

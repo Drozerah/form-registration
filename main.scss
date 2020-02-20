@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import './scss/utils';
+@import './scss/underline';
+@import './scss/overlay';
+@import './scss/error';
 
 body, html{
   height: 100vh;
@@ -85,8 +89,3 @@ body{
     }
   }
 }
-
-@import './partials/utils';
-@import './partials/underline';
-@import './partials/overlay';
-@import './partials/error';

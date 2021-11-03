@@ -20,6 +20,6 @@
     "watchify": "^3.11.1"
   },
   "dependencies": {
-    "validator": "^12.2.0"
+    "validator": "^13.7.0"
   }
 }
